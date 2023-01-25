@@ -57,7 +57,7 @@ variable "vcn_config" {
     internet_gateway_route_rules = null
     local_peering_gateways       = null
     nat_gateway_route_rules      = null
-    create_internet_gateway      = false
+    create_internet_gateway      = true
     create_nat_gateway           = false
     create_service_gateway       = false
   }
@@ -99,17 +99,20 @@ variable "ssh_authorized_keys_instance" {
 variable "security_list_config" {
   description = "A map of configs to apply to the security list."
   default = {
-    display_name    = "security_list_for_subnet"
-    tcp_protocol    = "6"
-    udp_protocol    = "17"
-    source          = "0.0.0.0/0"
-    tcp_description = "OpenVPN"
-    udp_description = "OpenVPN VPN tunnel"
-    source_type     = "CIDR_BLOCK"
-    tcp_min         = "443"
-    tcp_max         = "943"
-    udp_min         = "1194"
-    udp_max         = "1194"
+    display_name     = "security_list_for_subnet"
+    tcp_protocol     = "6"
+    udp_protocol     = "17"
+    source           = "0.0.0.0/0"
+    tcp_description  = "OpenVPN"
+    udp_description  = "OpenVPN VPN tunnel"
+    ssh_description  = "SSH tunnel to OpenVPN"
+    source_type      = "CIDR_BLOCK"
+    tcp_min          = "443"
+    tcp_max          = "943"
+    udp_min          = "1194"
+    udp_max          = "1194"
+    destination      = "0.0.0.0/0"
+    destination_type = "CIDR_BLOCK"
   }
   type = map(string)
 }

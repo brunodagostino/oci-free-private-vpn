@@ -29,9 +29,9 @@ resource "oci_core_subnet" "vpn_subnet" {
   cidr_block     = var.subnet_config.cidr_block
 
   # Optional
-  route_table_id = module.vcn.ig_route_id
-  # security_list_ids = [oci_core_security_list.public-security-list.id]
-  display_name = var.labels.subnet_display_name
+  route_table_id    = module.vcn.ig_route_id
+  security_list_ids = [oci_core_security_list.security_list.id]
+  display_name      = var.labels.subnet_display_name
 }
 
 resource "oci_core_security_list" "security_list" {
@@ -70,5 +70,30 @@ resource "oci_core_security_list" "security_list" {
       min = var.security_list_config.udp_min
       max = var.security_list_config.udp_max
     }
+  }
+
+  ingress_security_rules {
+    #Required
+    protocol = var.security_list_config.tcp_protocol
+    source   = var.security_list_config.source
+
+    description = var.security_list_config.ssh_description
+
+    source_type = var.security_list_config.source_type
+
+    tcp_options {
+      min = 22
+      max = 22
+    }
+  }
+
+  egress_security_rules {
+    # Required
+    protocol    = var.security_list_config.tcp_protocol
+    destination = var.security_list_config.destination
+
+    description = var.security_list_config.tcp_description
+
+    destination_type = var.security_list_config.destination_type
   }
 }
